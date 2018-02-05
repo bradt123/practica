@@ -1,8 +1,3 @@
-CREATE OR REPLACE FUNCTION "ti"."ft_tienda_ime" (	
-				p_administrador integer, p_id_usuario integer, p_tabla character varying, p_transaccion character varying)
-RETURNS character varying AS
-$BODY$
-
 /**************************************************************************
  SISTEMA:		Tienda
  FUNCION: 		ti.ft_tienda_ime
@@ -25,7 +20,13 @@ DECLARE
 	v_resp		            varchar;
 	v_nombre_funcion        text;
 	v_mensaje_error         text;
-	v_id_tienda	integer;
+	v_id_tienda				integer;
+    
+    v_nro_tramite 			varchar;
+    v_id_proceso_wf			integer;
+    v_id_estado_wf			integer;
+    v_codigo_estado			varchar;
+    v_id_gestion 			integer;
 			    
 BEGIN
 
@@ -42,6 +43,34 @@ BEGIN
 	if(p_transaccion='TI_TIE_INS')then
 					
         begin
+        	 select g.id_gestion
+             into v_id_gestion
+             from param.tgestion g
+             where g.gestion = EXTRACT(YEAR FROM current_date);
+        --raise exception 'llega: %',v_id_gestion; PARA LANZAR MENSJE
+        
+        	SELECT 
+            	ps_num_tramite,
+                ps_id_proceso_wf,
+                ps_id_estado_wf,
+                ps_codigo_estado
+         	into 
+            	v_nro_tramite,
+                v_id_proceso_wf,
+                v_id_estado_wf,
+                v_codigo_estado
+         	FROM wf.f_inicia_tramite(
+                 p_id_usuario,
+                 v_parametros._id_usuario_ai,
+                 v_parametros._nombre_usuario_ai,
+                 v_id_gestion, 
+                 'SISV',
+                 1,
+	        	null, 
+    	        'Gestión Equipajes',
+        	    'BOA-SIS_V'
+                );
+                
         	--Sentencia de la insercion
         	insert into ti.ttienda(
 			estado_reg,
@@ -51,7 +80,13 @@ BEGIN
 			id_usuario_reg,
 			id_usuario_ai,
 			id_usuario_mod,
-			fecha_mod
+			fecha_mod,
+            
+            nro_tramite,
+            id_proceso_wf,
+            id_estado_wf,
+            estado
+            
           	) values(
 			'activo',
 			v_parametros.nombre,
@@ -60,7 +95,12 @@ BEGIN
 			p_id_usuario,
 			v_parametros._id_usuario_ai,
 			null,
-			null
+			null,
+            
+            v_nro_tramite,
+            v_id_proceso_wf,
+            v_id_estado_wf,
+            v_codigo_estado
 							
 			
 			
@@ -142,7 +182,3 @@ EXCEPTION
 		raise exception '%',v_resp;
 				        
 END;
-$BODY$
-LANGUAGE 'plpgsql' VOLATILE
-COST 100;
-ALTER FUNCTION "ti"."ft_tienda_ime"(integer, integer, character varying, character varying) OWNER TO postgres;

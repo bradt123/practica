@@ -1,7 +1,3 @@
-CREATE OR REPLACE FUNCTION "ti"."ft_tienda_sel"(	
-				p_administrador integer, p_id_usuario integer, p_tabla character varying, p_transaccion character varying)
-RETURNS character varying AS
-$BODY$
 /**************************************************************************
  SISTEMA:		Tienda
  FUNCION: 		ti.ft_tienda_sel
@@ -105,7 +101,3 @@ EXCEPTION
 			v_resp = pxp.f_agrega_clave(v_resp,'procedimientos',v_nombre_funcion);
 			raise exception '%',v_resp;
 END;
-$BODY$
-LANGUAGE 'plpgsql' VOLATILE
-COST 100;
-ALTER FUNCTION "ti"."ft_tienda_sel"(integer, integer, character varying, character varying) OWNER TO postgres;

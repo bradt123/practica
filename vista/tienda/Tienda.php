@@ -17,8 +17,8 @@ Phx.vista.Tienda=Ext.extend(Phx.gridInterfaz,{
     	//llama al constructor de la clase padre
 		Phx.vista.Tienda.superclass.constructor.call(this,config);
 		this.init();
-		this.load({params:{start:0, limit:this.tam_pag}})
-	
+		this.load({params:{start:0, limit:this.tam_pag}});
+		
 	
 	
      this.addButton('sig_estado', {
@@ -32,24 +32,26 @@ Phx.vista.Tienda=Ext.extend(Phx.gridInterfaz,{
  },
   sigEstado: function () {
     var rec = this.sm.getSelected();
-    this.objWizard = Phx.CP.loadWindows('../../../sis_workflow/vista/estado_wf/FormEstadoWf.php', 'Estado de Wf', {
+    this.objWizard = Phx.CP.loadWindows('../../../sis_workflow/vista/estado_wf/FormEstadoWf.php', 
+    'Estado de Wf', 
+    {
         modal: true,
         width: 700,
         height: 450
     }, {
         data: {
-            id_estado_wf: rec.data.id_estado_wf,
-            id_proceso_wf: rec.data.id_proceso_wf
+            id_estado_wf: ti.data.id_estado_wf,
+            id_proceso_wf: ti.data.id_proceso_wf
         }
-    }, this.idContenedor, 
-    'FormEstadoWf', 
+    }, this.idContenedor, 'FormEstadoWf', 
     {
     	config: [{
     		event: 'beforesave', 
-    		delegate: this.onSaveWizard
+    		delegate: this.onSaveWizard,
     		}], 
     		scope: this
-    		});
+    		}
+    	);
 }
 ,
 preparaMenu: function(n)
@@ -57,7 +59,7 @@ preparaMenu: function(n)
         var tb =this.tbar;
 
 
-        Phx.vista.ParteIrregular.superclass.preparaMenu.call(this,n);
+        Phx.vista.Tienda.superclass.preparaMenu.call(this,n);
         //this.getBoton('btnChequeoDocumentosWf').setDisabled(false);
         //this.getBoton('diagrama_gantt').enable();
         //this.getBoton('btnObs').enable();
@@ -72,7 +74,7 @@ preparaMenu: function(n)
     },
 
     liberaMenu:function(){
-        var tb = Phx.vista.ParteIrregular.superclass.liberaMenu.call(this);
+        var tb = Phx.vista.Tienda.superclass.liberaMenu.call(this);
         if(tb){
             //this.getBoton('ant_estado').disable();
             
@@ -108,7 +110,8 @@ preparaMenu: function(n)
             timeout:this.timeout,
             scope:this
         });
-    },
+    }
+   ,
     
     
     

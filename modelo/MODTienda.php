@@ -109,7 +109,7 @@ class MODTienda extends MODbase{
 	 $this->setParametro('json_procesos','json_procesos','text');
 	 
 		//Define los parametros para la funcion
-		$this->setParametro('id_tienda','id_tienda','int4');
+		//$this->setParametro('id_tienda','id_tienda','int4');
 
 		//Ejecuta la instruccion
 		$this->armarConsulta();
